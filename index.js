@@ -1,3 +1,5 @@
+
+"use strict";
 var
 	gutil = require('gulp-util'),
 	exec = require('child_process').exec,
@@ -6,8 +8,7 @@ var
 	through = require('through2')
 	;
 
-// Consts
-const PLUGIN_NAME = 'gulp-nunit-runner';
+var PLUGIN_NAME = 'gulp-nunit-runner';
 
 var assemblies = [],
 	switches = [],
@@ -15,12 +16,12 @@ var assemblies = [],
 
 function gulpNunitRunner(opts) {
 	options = opts;
-	if (!options || !options.command) {
+	if (!opts || !opts.command) {
 		throw new PluginError(PLUGIN_NAME, "Path to NUnit executable is required in options.command");
 	}
 
-	if (options.options) {
-		parseSwitches(options.options);
+	if (opts.options) {
+		parseSwitches(opts.options);
 	}
 
 	// Creating and return a stream through which each file will pass
@@ -51,13 +52,13 @@ function flush(callback) {
 	var execute = [];
 	execute.push(options.command);
 	execute.push(switches.join(' '));
-	execute.push(' "' + assemblies.join('" "') + '"');
-	execute = execute.join('');
-	console.log(execute);
+	execute.push('"' + assemblies.join('" "') + '"');
+	execute = execute.join(' ');
+
 	var cp = exec(execute, function (err, stdout, stderr) {
-		console.log("err", err);
-		console.log("stdout", stdout);
-		console.log("stderr", stderr);
+		if (err) {
+			return callback(err);
+		}
 		return callback();
 	});
 
