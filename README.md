@@ -3,6 +3,13 @@
 
 A [Gulp.js](http://gulpjs.com/) plugin to facilitate running [NUnit](http://www.nunit.org/) tests on .NET assemblies. Much of this work was inspired by the [gulp-nunit](https://github.com/stormid/gulp-nunit) plugin.
 
+##Installation
+From the root of your project (where your `gulpfile.js` is), issue the following command:
+
+```bat
+npm install --save-dev gulp-nunit-runner
+```
+
 ##Usage
 The plugin uses standard `gulp.src` globs to retrieve a list of assemblies that should be tested with Nunit. In its simplest form you just need to supply the command with the path to your `nunit-console.exe`. You should add `{read: false}` to your `gulp.src` so that it doesn't actually read the files and only grabs the file names.
 
