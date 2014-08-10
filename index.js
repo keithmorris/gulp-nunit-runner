@@ -5,7 +5,7 @@ var
 	_ = require('lodash'),
 	PluginError = gutil.PluginError,
 	through = require('event-stream').through
-;
+	;
 
 var PLUGIN_NAME = 'gulp-nunit-runner';
 
