@@ -59,7 +59,6 @@ function flush() {
 
 	if (assemblies.length === 0) {
 		this.emit('error', new gutil.PluginError(PLUGIN_NAME, 'assemblies are required.'));
-		return end();
 	}
 
 	var execute = [];
