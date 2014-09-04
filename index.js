@@ -23,6 +23,8 @@ var runner = function gulpNunitRunner(opts) {
 	if (!opts || !opts.executable) {
 		throw new PluginError(PLUGIN_NAME, "Path to NUnit executable is required in options.executable.");
 	}
+	// trim any existing surrounding quotes and then wrap in ""
+	opts.executable = '"' + opts.executable.replace(/(^")|(^')|("$)|('$)/g, "") + '"';
 
 	if (opts.options) {
 		parseSwitches(opts.options);
@@ -51,7 +53,9 @@ runner.addAssembly = function (assembly) {
 runner.getExecutionCommand = function () {
 	var execute = [];
 	execute.push(options.executable);
-	execute.push(switches.join(' '));
+	if (switches.length) {
+		execute.push(switches.join(' '));
+	}
 	execute.push('"' + assemblies.join('" "') + '"');
 	execute = execute.join(' ');
 	return execute;
