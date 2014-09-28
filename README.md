@@ -60,6 +60,23 @@ This would result in the following command:
 ```bat
 C:/nunit/bin/nunit-console.exe /nologo /config:"Release" /transform:"myTransform.xslt" "C:\full\path\to\Database.Test.dll" "C:\full\path\to\Services.Test.dll"
 ```
+## Release Notes
+
+### 0.2.0 (28 Sept 2014)
+- Fixes #2 "Simultaneous runs of test tasks cause duplication"
+- Major rearchitecture of plugin by @VoiceOfWisdom
+- Adds release notes to README.md
+
+### 0.1.2 (4 Sept 2014)
+- Fixes #1 "runner fails if executable path has space"
+
+### 0.1.1 (10 Aug 2014)
+- Documentation update
+
+### 0.1.0 (10 Aug 2014)
+- Initial release
+
+
 
 
 
