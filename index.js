@@ -1,58 +1,55 @@
+/* global require */
+
 "use strict";
 var _ = require('lodash'),
 	exec = require('child_process').exec,
 	gutil = require('gulp-util'),
 	PluginError = gutil.PluginError,
-	through = require('event-stream').through;
+	es = require('event-stream');
 
 var PLUGIN_NAME = 'gulp-nunit-runner';
 
-var assemblies = [],
-	switches = [],
-	options;
-
-var runner,
-	stream,
-	fail,
-	end;
-
 // Main entry point
 var runner = function gulpNunitRunner(opts) {
-	options = opts;
+	//options = opts;
 
 	if (!opts || !opts.executable) {
 		throw new PluginError(PLUGIN_NAME, "Path to NUnit executable is required in options.executable.");
 	}
-	// trim any existing surrounding quotes and then wrap in ""
-	opts.executable = '"' + opts.executable.replace(/(^")|(^')|("$)|('$)/g, "") + '"';
-
-	if (opts.options) {
-		parseSwitches(opts.options);
-	}
 
 	// Creating and return a stream through which each file will pass
-	stream = through(transform, flush);
-	setupHandlers();
+	// var stream = es.writeArray(run(opts));
+
+	var files = [];
+
+	var stream = es.through(function write(file) {
+		if (_.isUndefined(file)) {
+			fail(this, 'File may not be null.');
+		}
+
+		files.push(file);
+		this.emit('data', file);
+	}, function end () {
+		run(this, files, opts);
+	});
+
 	return stream;
 };
 
-var setupHandlers = function () {
-	fail = _.bind(function (msg) {
-		this.emit('error', new gutil.PluginError(PLUGIN_NAME, msg));
-	}, stream);
-
-	end = _.bind(function () {
-		this.emit('end');
-	}, stream);
-};
-
-runner.addAssembly = function (assembly) {
-	assemblies.push(assembly);
-}
-
-runner.getExecutionCommand = function () {
+runner.getExecutionCommand = function (options, assemblies) {
 	var execute = [];
+
+	// trim any existing surrounding quotes and then wrap in ""
+	options.executable = '"' + options.executable.replace(/(^")|(^')|("$)|('$)/g, "") + '"';
 	execute.push(options.executable);
+
+	var switches;
+	if (options.options) {
+		switches = parseSwitches(options.options);
+	} else {
+		switches = [];
+	}
+
 	if (switches.length) {
 		execute.push(switches.join(' '));
 	}
@@ -62,40 +59,54 @@ runner.getExecutionCommand = function () {
 };
 
 function parseSwitches(options) {
-	_.forEach(options, function (val, key) {
+	var switches = _.map(options, function (val, key) {
 		if (typeof val === 'boolean') {
 			if (val) {
-				switches.push('/' + key);
+				return('/' + key);
 			}
-			return;
+			return undefined;
 		}
 		if (typeof val === 'string') {
-			switches.push('/' + key + ':"' + val + '"');
+			return('/' + key + ':"' + val + '"');
 		}
 	});
+
+	var filtered = _.filter(switches, function(val){
+		return !_.isUndefined(val);
+	});
+
+	return filtered;
 }
 
-function transform(file, enc, callback) {
-	if (!file) {
-		return fail('File may not be null.');
-	}
-	runner.addAssembly(file.path);
-	this.push(file);
+function fail(stream, msg) {
+	stream.emit('error', new gutil.PluginError(PLUGIN_NAME, msg));
 }
 
-function flush() {
+function end(stream) {
+	stream.emit('end');
+}
 
+function run(stream, files, options) {
+	 
+	var assemblies = files.map(function(file){
+		return file.path;
+	});
+ 
 	if (assemblies.length === 0) {
-		return fail('Some assemblies required.'); //<-- See what I did there ;)
+		return fail(stream, 'Some assemblies required.'); //<-- See what I did there ;)
 	}
 
-	var cp = exec(runner.getExecutionCommand(), function (err/*,stdout, stderr*/) {
+	assemblies.forEach(function(assembly){
+		console.log('assembly: ' + assembly);
+	});
+
+	var cp = exec(runner.getExecutionCommand(options, assemblies), function (err/*,stdout, stderr*/) {
 		if (err) {
 			gutil.log(gutil.colors.red('NUnit tests failed.'));
-			return fail('NUnit tests failed.');
+			return fail(stream, 'NUnit tests failed.');
 		}
 		gutil.log(gutil.colors.cyan('NUnit tests passed'));
-		return end();
+		return end(stream);
 	});
 
 	cp.stdout.pipe(process.stdout);
