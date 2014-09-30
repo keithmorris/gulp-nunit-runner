@@ -26,33 +26,28 @@
 			var opts;
 			var assemblies;
 
-			it('Should quote a non-quoted string', function(){
+			it('Should not quote a non-quoted string', function(){
 				opts = {
 					executable: 'C:\\nunit\\bin\\nunit-console.exe'
 				};
 
-				assemblies = ['First.Test.dll'];
-
-				expect(nunit.getExecutionCommand(opts, assemblies)).to.equal('"C:\\nunit\\bin\\nunit-console.exe" "First.Test.dll"');
+				expect(nunit.getExecutable(opts)).to.equal('C:\\nunit\\bin\\nunit-console.exe');
 			});
 
-			it('Should correctly quote a double-quoted string', function(){
+			it('Should unquote a double-quoted string', function(){
 				opts = {
 					executable: '"C:\\nunit\\bin\\nunit-console.exe"'
 				};
 
-				assemblies = ['First.Test.dll'];
-
-				expect(nunit.getExecutionCommand(opts, assemblies)).to.equal('"C:\\nunit\\bin\\nunit-console.exe" "First.Test.dll"');
+				expect(nunit.getExecutable(opts)).to.equal('C:\\nunit\\bin\\nunit-console.exe');
 			});
 
-			it('Should correctly quote a single-quoted string', function(){
+			it('Should unquote a single-quoted string', function(){
 				opts = {
 					executable: "'C:\\nunit\\bin\\nunit-console.exe'"
 				};
 
-				assemblies = ['First.Test.dll'];
-				expect(nunit.getExecutionCommand(opts, assemblies)).to.equal('"C:\\nunit\\bin\\nunit-console.exe" "First.Test.dll"');
+				expect(nunit.getExecutable(opts)).to.equal('C:\\nunit\\bin\\nunit-console.exe');
 			});
 		});
 
@@ -72,17 +67,17 @@
 				stream.write();
 			});
 
-			it('Should have correct command with assemblies only.', function () {
+			it('Should have correct options with assemblies only.', function () {
 				opts = {
 					executable: 'C:\\nunit\\bin\\nunit-console.exe'
 				};
 
 				assemblies = ['First.Test.dll', 'Second.Test.dll'];
 
-				expect(nunit.getExecutionCommand(opts, assemblies)).to.equal('"C:\\nunit\\bin\\nunit-console.exe" "First.Test.dll" "Second.Test.dll"');
+				expect(nunit.getArguments(opts, assemblies)).to.deep.equal(['First.Test.dll', 'Second.Test.dll']);
 			});
 
-			it('Should have correct command with options added.', function () {
+			it('Should have correct optiosns with options and assemblies.', function () {
 				opts = {
 					executable: 'C:\\nunit\\bin\\nunit-console.exe',
 					options   : {
@@ -93,10 +88,18 @@
 				};
 
 				assemblies = ['First.Test.dll', 'Second.Test.dll'];
-				
-				expect(nunit.getExecutionCommand(opts, assemblies)).to.equal('"C:\\nunit\\bin\\nunit-console.exe" /nologo /config:"Release" /transform:"myTransform.xslt" "First.Test.dll" "Second.Test.dll"');
+
+
+        expect(nunit.getArguments(opts, assemblies)).to.deep.equal(
+          [
+            '/nologo',
+            '/config:"Release"',
+            '/transform:"myTransform.xslt"',
+            'First.Test.dll',
+            'Second.Test.dll'
+           ]);
+
 			});
 		});
 	});
 }());
-
