@@ -75,7 +75,7 @@ function parseSwitches(options) {
             return undefined;
         }
         if (typeof val === 'string') {
-            return ('/' + key + ':"' + val + '"');
+            return ('/' + key + ':' + val + '');
         }
     });
 
