@@ -93,8 +93,8 @@
         expect(nunit.getArguments(opts, assemblies)).to.deep.equal(
           [
             '/nologo',
-            '/config:"Release"',
-            '/transform:"myTransform.xslt"',
+            '/config:Release',
+            '/transform:myTransform.xslt',
             'First.Test.dll',
             'Second.Test.dll'
            ]);
