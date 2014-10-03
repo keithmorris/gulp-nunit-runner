@@ -1,6 +1,6 @@
 /* global require */
 
-"use strict";
+'use strict';
 var _ = require('lodash'),
     child_process = require('child_process'),
     gutil = require('gulp-util'),
@@ -14,7 +14,8 @@ var runner = function gulpNunitRunner(opts) {
     //options = opts;
 
     if (!opts || !opts.executable) {
-        throw new PluginError(PLUGIN_NAME, "Path to NUnit executable is required in options.executable.");
+        throw new PluginError(PLUGIN_NAME,
+            "Path to NUnit executable is required in options.executable.");
     }
 
     // Creating and return a stream through which each file will pass
@@ -44,7 +45,6 @@ runner.getExecutable = function(options) {
 
 
 runner.getArguments = function(options, assemblies) {
-
     var args = [];
 
     if (options.options) {
@@ -53,7 +53,7 @@ runner.getArguments = function(options, assemblies) {
     args = args.concat(assemblies);
 
     // var assemblyArgs = _.map(assemblies, function(assembly){
-    // 	return '"' + assembly + '"';
+    //  return '"' + assembly + '"';
     // });
 
     //args.push(assemblyArgs);
@@ -104,23 +104,21 @@ function run(stream, files, options) {
         return fail(stream, 'Some assemblies required.'); //<-- See what I did there ;)
     }
 
-    assemblies.forEach(function(assembly) {
-        console.log('assembly: ' + assembly);
-    });
-
+    // assemblies.forEach(function(assembly) {
+    //     console.log('assembly: ' + assembly);
+    // });
 
     var opts = {
         stdio: [process.stdin, process.stdout, process.stderr, 'pipe']
     };
 
-
     var exe = runner.getExecutable(options);
     var args = runner.getArguments(options, assemblies);
-    _.each(args, console.log);
+    
     var child = child_process.spawn(
-        exe,
-        args,
-        opts);
+            exe,
+            args,
+            opts);
 
     child.on('close', function(code) {
         if (code !== 0) {
