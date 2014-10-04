@@ -16,7 +16,7 @@ The plugin uses standard `gulp.src` globs to retrieve a list of assemblies that 
 ```javascript
 var gulp = require('gulp'),
     nunit = require('gulp-nunit-runner');
-    
+
 gulp.task('unit-test', function () {
 	return gulp.src(['**/*.Test.dll'], {read: false})
 		.pipe(nunit({
@@ -42,7 +42,7 @@ For more information on available switches, see the NUnit documentation:
 ```javascript
 var gulp = require('gulp'),
     nunit = require('gulp-nunit-runner');
-    
+
 gulp.task('unit-test', function () {
 	return gulp.src(['**/*.Test.dll'], {read: false})
 		.pipe(nunit({
@@ -62,6 +62,10 @@ C:/nunit/bin/nunit-console.exe /nologo /config:"Release" /transform:"myTransform
 ```
 ## Release Notes
 
+### 0.3.0 (30 Sept 2014)
+- Fixes large amount of writes by NUnit tests causing node to crash
+- Switched to using `child_process::spawn`, much simpler command building.
+
 ### 0.2.0 (28 Sept 2014)
 - Fixes #2 "Simultaneous runs of test tasks cause duplication"
 - Major rearchitecture of plugin by @VoiceOfWisdom
@@ -75,8 +79,3 @@ C:/nunit/bin/nunit-console.exe /nologo /config:"Release" /transform:"myTransform
 
 ### 0.1.0 (10 Aug 2014)
 - Initial release
-
-
-
-
-
