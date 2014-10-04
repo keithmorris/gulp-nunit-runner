@@ -76,7 +76,7 @@
 				expect(nunit.getArguments(opts, assemblies)).to.deep.equal(['First.Test.dll', 'Second.Test.dll']);
 			});
 
-			it('Should have correct optiosns with options and assemblies.', function () {
+			it('Should have correct options with options and assemblies.', function () {
 				opts = {
 					executable: 'C:\\nunit\\bin\\nunit-console.exe',
 					options   : {
