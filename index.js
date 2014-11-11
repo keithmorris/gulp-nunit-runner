@@ -58,6 +58,9 @@ function parseSwitches(options) {
 		if (typeof val === 'string') {
 			return ('/' + key + ':' + val + '');
 		}
+		if (val instanceof Array) {
+			return ('/' + key + ':"' + val.join(',') + '"');
+		}
 	});
 
 	var filtered = _.filter(switches, function (val) {
