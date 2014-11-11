@@ -97,6 +97,19 @@
 						'First.Test.dll',
 						'Second.Test.dll'
 					]);
+			});
+
+			it('Should properly format multi args.', function () {
+				opts = {
+					options   : {
+						exclude: ['Acceptance', 'Integration']
+					}
+				};
+
+				expect(nunit.getArguments(opts, [])).to.deep.equal(
+					[
+						'/exclude:"Acceptance,Integration"'
+					]);
 			}); // end it
 		}); // end describe
 	}); // end describe suite
