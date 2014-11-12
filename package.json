@@ -6,6 +6,12 @@
   "scripts": {
     "test": "gulp"
   },
+  "files": [
+    "index.js",
+    "lib/*.js",
+    "README.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/keithmorris/gulp-nunit-runner.git"
@@ -25,7 +31,9 @@
   "dependencies": {
     "event-stream": "^3.1.7",
     "gulp-util": "^3.0.0",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "sax": "~0.6.1",
+    "temp": "~0.8.1"
   },
   "devDependencies": {
     "chai": "^1.9.1",

@@ -5,7 +5,10 @@ var _ = require('lodash'),
 	gutil = require('gulp-util'),
 	PluginError = gutil.PluginError,
 	es = require('event-stream'),
-	path = require('path');
+	path = require('path'),
+	temp = require('temp'),
+	fs = require('fs'),
+	teamcity = require('./lib/teamcity');
 
 var PLUGIN_NAME = 'gulp-nunit-runner';
 var NUNIT_CONSOLE = 'nunit-console.exe';
@@ -60,7 +63,8 @@ function parseSwitches(options) {
 			return undefined;
 		}
 		if (typeof val === 'string') {
-			return ('/' + key + ':' + val + '');
+			var qualifier = val.trim().indexOf(' ') > -1 ? '"' : '';
+			return ('/' + key + ':' + qualifier + val + qualifier);
 		}
 		if (val instanceof Array) {
 			return ('/' + key + ':"' + val.join(',') + '"');
@@ -83,6 +87,16 @@ function end(stream) {
 }
 
 function run(stream, files, options) {
+
+	var cleanupTempFiles;
+
+	options.options = options.options || {};
+
+	if (!options.options.result && options.teamcity) {
+		temp.track();
+		options.options.result = temp.path({ suffix: '.xml' });
+		cleanupTempFiles = temp.cleanup;
+	}
 
 	var assemblies = files.map(function (file) {
 		return file.path;
@@ -109,6 +123,8 @@ function run(stream, files, options) {
 	}); 
 
 	child.on('close', function (code) {
+		if (options.teamcity) gutil.log.apply(null, teamcity(fs.readFileSync(options.options.result, 'utf8')));
+		if (cleanupTempFiles) cleanupTempFiles();
 		if (code !== 0) {
 			gutil.log(gutil.colors.red('NUnit tests failed.'));
 			fail(stream, 'NUnit tests failed.');
