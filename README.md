@@ -11,7 +11,7 @@ npm install --save-dev gulp-nunit-runner
 ```
 
 ##Usage
-The plugin uses standard `gulp.src` globs to retrieve a list of assemblies that should be tested with Nunit. In its simplest form you just need to supply the command with the path to your `nunit-console.exe`. You should add `{read: false}` to your `gulp.src` so that it doesn't actually read the files and only grabs the file names.
+The plugin uses standard `gulp.src` globs to retrieve a list of assemblies that should be tested with Nunit. By default the plugin looks for the NUnit console runner in your `PATH`. You can optionally specify the NUnit `bin` folder or the full path of the runner as demonstrated below. You should add `{read: false}` to your `gulp.src` so that it doesn't actually read the files and only grabs the file names.
 
 ```javascript
 var gulp = require('gulp'),
