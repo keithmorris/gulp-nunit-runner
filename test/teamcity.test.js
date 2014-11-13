@@ -1,0 +1,102 @@
+var expect = require('chai').expect,
+    fs = require('fs'),
+    teamcity = require('../lib/teamcity');
+
+describe('teamcity', function() {
+
+    it('should generate TeamCity service messages', function() {
+
+        var log = teamcity(fs.readFileSync('test/teamcity.xml', 'utf8'));
+
+        expect(log[0]).to.equal('##teamcity[testSuiteStarted name=\'mock-assembly.dll\']');
+            expect(log[1]).to.equal('##teamcity[testSuiteStarted name=\'NUnit\']');
+                expect(log[2]).to.equal('##teamcity[testSuiteStarted name=\'Tests\']');
+                    expect(log[3]).to.equal('##teamcity[testSuiteStarted name=\'Assemblies\']');
+                        expect(log[4]).to.equal('##teamcity[testSuiteStarted name=\'MockTestFixture\']');
+                            expect(log[5]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Assemblies.MockTestFixture.FailingTest\']');
+                                expect(log[6]).to.equal('##teamcity[testFailed name=\'NUnit.Tests.Assemblies.MockTestFixture.FailingTest\' message=\'Intentional failure\' details=\'at NUnit.Tests.Assemblies.MockTestFixture.FailingTest()|r|n\']');
+                            expect(log[7]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Assemblies.MockTestFixture.FailingTest\' duration=\'16\']');
+                            expect(log[8]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Assemblies.MockTestFixture.InconclusiveTest\']');
+                                expect(log[9]).to.equal('##teamcity[testFailed name=\'NUnit.Tests.Assemblies.MockTestFixture.InconclusiveTest\' message=\'No valid data\']');
+                            expect(log[10]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Assemblies.MockTestFixture.InconclusiveTest\' duration=\'0\']');
+                            expect(log[11]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Assemblies.MockTestFixture.MockTest1\']');
+                            expect(log[12]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Assemblies.MockTestFixture.MockTest1\' duration=\'0\']');
+                            expect(log[13]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Assemblies.MockTestFixture.MockTest2\']');
+                            expect(log[14]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Assemblies.MockTestFixture.MockTest2\' duration=\'0\']');
+                            expect(log[15]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Assemblies.MockTestFixture.MockTest3\']');
+                            expect(log[16]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Assemblies.MockTestFixture.MockTest3\' duration=\'16\']');
+                            expect(log[17]).to.equal('##teamcity[testIgnored name=\'NUnit.Tests.Assemblies.MockTestFixture.MockTest4\' message=\'ignoring this test method for now\']');
+                            expect(log[18]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Assemblies.MockTestFixture.TestWithException\']');
+                                expect(log[19]).to.equal('##teamcity[testFailed name=\'NUnit.Tests.Assemblies.MockTestFixture.TestWithException\' message=\'System.ApplicationException : Intentional Exception\' details=\'at NUnit.Tests.Assemblies.MockTestFixture.MethodThrowsException()|r|nat NUnit.Tests.Assemblies.MockTestFixture.TestWithException()|r|n\']');
+                            expect(log[20]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Assemblies.MockTestFixture.TestWithException\' duration=\'0\']');
+                            expect(log[21]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Assemblies.MockTestFixture.TestWithManyProperties\']');
+                            expect(log[22]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Assemblies.MockTestFixture.TestWithManyProperties\' duration=\'0\']');
+                        expect(log[23]).to.equal('##teamcity[testSuiteFinished name=\'MockTestFixture\']');
+                    expect(log[24]).to.equal('##teamcity[testSuiteFinished name=\'Assemblies\']');
+                    expect(log[25]).to.equal('##teamcity[testSuiteStarted name=\'BadFixture\']');
+                    expect(log[26]).to.equal('##teamcity[testSuiteFinished name=\'BadFixture\']');
+                    expect(log[27]).to.equal('##teamcity[testSuiteStarted name=\'FixtureWithTestCases\']');
+                        expect(log[28]).to.equal('##teamcity[testSuiteStarted name=\'GenericMethod\']');
+                            expect(log[29]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.FixtureWithTestCases.GenericMethod<Int32>(2,4)\']');
+                            expect(log[30]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.FixtureWithTestCases.GenericMethod<Int32>(2,4)\' duration=\'0\']');
+                            expect(log[31]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.FixtureWithTestCases.GenericMethod<Double>(9.2d,11.7d)\']');
+                            expect(log[32]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.FixtureWithTestCases.GenericMethod<Double>(9.2d,11.7d)\' duration=\'0\']');
+                        expect(log[33]).to.equal('##teamcity[testSuiteFinished name=\'GenericMethod\']');
+                        expect(log[34]).to.equal('##teamcity[testSuiteStarted name=\'MethodWithParameters\']');
+                            expect(log[35]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.FixtureWithTestCases.MethodWithParameters(2,2)\']');
+                            expect(log[36]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.FixtureWithTestCases.MethodWithParameters(2,2)\' duration=\'0\']');
+                            expect(log[37]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.FixtureWithTestCases.MethodWithParameters(9,11)\']');
+                            expect(log[38]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.FixtureWithTestCases.MethodWithParameters(9,11)\' duration=\'0\']');
+                        expect(log[39]).to.equal('##teamcity[testSuiteFinished name=\'MethodWithParameters\']');
+                    expect(log[40]).to.equal('##teamcity[testSuiteFinished name=\'FixtureWithTestCases\']');
+                    expect(log[41]).to.equal('##teamcity[testSuiteStarted name=\'GenericFixture<T>\']');
+                        expect(log[42]).to.equal('##teamcity[testSuiteStarted name=\'GenericFixture<Double>(11.5d)\']');
+                            expect(log[43]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.GenericFixture<Double>(11.5d).Test1\']');
+                            expect(log[44]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.GenericFixture<Double>(11.5d).Test1\' duration=\'0\']');
+                            expect(log[45]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.GenericFixture<Double>(11.5d).Test2\']');
+                            expect(log[46]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.GenericFixture<Double>(11.5d).Test2\' duration=\'0\']');
+                        expect(log[47]).to.equal('##teamcity[testSuiteFinished name=\'GenericFixture<Double>(11.5d)\']');
+                        expect(log[48]).to.equal('##teamcity[testSuiteStarted name=\'GenericFixture<Int32>(5)\']');
+                            expect(log[49]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.GenericFixture<Int32>(5).Test1\']');
+                            expect(log[50]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.GenericFixture<Int32>(5).Test1\' duration=\'0\']');
+                            expect(log[51]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.GenericFixture<Int32>(5).Test2\']');
+                            expect(log[52]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.GenericFixture<Int32>(5).Test2\' duration=\'0\']');
+                        expect(log[53]).to.equal('##teamcity[testSuiteFinished name=\'GenericFixture<Int32>(5)\']');
+                    expect(log[54]).to.equal('##teamcity[testSuiteFinished name=\'GenericFixture<T>\']');
+                    expect(log[55]).to.equal('##teamcity[testSuiteStarted name=\'IgnoredFixture\']');
+                        expect(log[56]).to.equal('##teamcity[testIgnored name=\'NUnit.Tests.IgnoredFixture.Test1\']');
+                        expect(log[57]).to.equal('##teamcity[testIgnored name=\'NUnit.Tests.IgnoredFixture.Test2\']');
+                        expect(log[58]).to.equal('##teamcity[testIgnored name=\'NUnit.Tests.IgnoredFixture.Test3\']');
+                    expect(log[59]).to.equal('##teamcity[testSuiteFinished name=\'IgnoredFixture\']');
+                    expect(log[60]).to.equal('##teamcity[testSuiteStarted name=\'ParameterizedFixture\']');
+                        expect(log[61]).to.equal('##teamcity[testSuiteStarted name=\'ParameterizedFixture(42)\']');
+                            expect(log[62]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.ParameterizedFixture(42).Test1\']');
+                            expect(log[63]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.ParameterizedFixture(42).Test1\' duration=\'0\']');
+                            expect(log[64]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.ParameterizedFixture(42).Test2\']');
+                            expect(log[65]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.ParameterizedFixture(42).Test2\' duration=\'0\']');
+                        expect(log[66]).to.equal('##teamcity[testSuiteFinished name=\'ParameterizedFixture(42)\']');
+                        expect(log[67]).to.equal('##teamcity[testSuiteStarted name=\'ParameterizedFixture(5)\']');
+                            expect(log[68]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.ParameterizedFixture(5).Test1\']');
+                            expect(log[69]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.ParameterizedFixture(5).Test1\' duration=\'0\']');
+                            expect(log[70]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.ParameterizedFixture(5).Test2\']');
+                            expect(log[71]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.ParameterizedFixture(5).Test2\' duration=\'0\']');
+                        expect(log[72]).to.equal('##teamcity[testSuiteFinished name=\'ParameterizedFixture(5)\']');
+                    expect(log[73]).to.equal('##teamcity[testSuiteFinished name=\'ParameterizedFixture\']');
+                    expect(log[74]).to.equal('##teamcity[testSuiteStarted name=\'Singletons\']');
+                        expect(log[75]).to.equal('##teamcity[testSuiteStarted name=\'OneTestCase\']');
+                            expect(log[76]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.Singletons.OneTestCase.TestCase\']');
+                            expect(log[77]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.Singletons.OneTestCase.TestCase\' duration=\'0\']');
+                        expect(log[78]).to.equal('##teamcity[testSuiteFinished name=\'OneTestCase\']');
+                    expect(log[79]).to.equal('##teamcity[testSuiteFinished name=\'Singletons\']');
+                    expect(log[80]).to.equal('##teamcity[testSuiteStarted name=\'TestAssembly\']');
+                        expect(log[81]).to.equal('##teamcity[testSuiteStarted name=\'MockTestFixture\']');
+                            expect(log[82]).to.equal('##teamcity[testStarted name=\'NUnit.Tests.TestAssembly.MockTestFixture.MyTest\']');
+                            expect(log[83]).to.equal('##teamcity[testFinished name=\'NUnit.Tests.TestAssembly.MockTestFixture.MyTest\' duration=\'0\']');
+                        expect(log[84]).to.equal('##teamcity[testSuiteFinished name=\'MockTestFixture\']');
+                    expect(log[85]).to.equal('##teamcity[testSuiteFinished name=\'TestAssembly\']');
+                expect(log[86]).to.equal('##teamcity[testSuiteFinished name=\'Tests\']');
+            expect(log[87]).to.equal('##teamcity[testSuiteFinished name=\'NUnit\']');
+        expect(log[88]).to.equal('##teamcity[testSuiteFinished name=\'mock-assembly.dll\']');
+
+    });
+});
