@@ -1,3 +1,5 @@
+var path = require('path');
+
 /* global require,describe,it,beforeEach */
 (function () {
 	"use strict";
@@ -12,14 +14,6 @@
 	describe('Tests for gulp-nunit-runner', function () {
 		beforeEach(function () {
 			clearNunit();
-		});
-
-		describe('No executable command passed in', function () {
-			it('Should throw an error.', function () {
-				expect(function () {
-					nunit({});
-				}).to.throw(Error);
-			});
 		});
 
 		describe('Test quoted executable path and path with spaces.', function () {
@@ -47,6 +41,52 @@
 				};
 
 				expect(nunit.getExecutable(opts)).to.equal('C:\\nunit\\bin\\nunit-console.exe');
+			});
+
+			it('Should add the anycpu executable if only a path is passed and no platform is specified', function () {
+				opts = {
+					executable: path.join('C:', 'nunit', 'bin')
+				};
+
+				expect(nunit.getExecutable(opts)).to.equal(path.join('C:', 'nunit', 'bin', 'nunit-console.exe'));
+			});
+
+			it('Should add the anycpu executable if only a path is passed and anycpy platform is specified', function () {
+				opts = {
+					executable: path.join('C:', 'nunit', 'bin'),
+					platform  : 'anycpu'
+				};
+
+				expect(nunit.getExecutable(opts)).to.equal(path.join('C:', 'nunit', 'bin', 'nunit-console.exe'));
+			});
+
+			it('Should add the x86 executable if only a path is passed and platform is x86', function () {
+				opts = {
+					executable: path.join('C:', 'nunit', 'bin'),
+					platform  : 'x86'
+				};
+
+				expect(nunit.getExecutable(opts)).to.equal(path.join('C:', 'nunit', 'bin', 'nunit-console-x86.exe'));
+			});
+
+			it('Should be the anycpu executable if no path is passed and no platform is specified', function () {
+				expect(nunit.getExecutable({})).to.equal('nunit-console.exe');
+			});
+
+			it('Should be the anycpu executable if no path is passed and anycpy platform is specified', function () {
+				opts = {
+					platform: 'anycpu'
+				};
+
+				expect(nunit.getExecutable(opts)).to.equal('nunit-console.exe');
+			});
+
+			it('Should be the x86 executable if no path is passed and platform is x86', function () {
+				opts = {
+					platform: 'x86'
+				};
+
+				expect(nunit.getExecutable(opts)).to.equal('nunit-console-x86.exe');
 			});
 		});
 
@@ -96,6 +136,19 @@
 						'/transform:myTransform.xslt',
 						'First.Test.dll',
 						'Second.Test.dll'
+					]);
+			});
+
+			it('Should properly format multi args.', function () {
+				opts = {
+					options: {
+						exclude: ['Acceptance', 'Integration']
+					}
+				};
+
+				expect(nunit.getArguments(opts, [])).to.deep.equal(
+					[
+						'/exclude:"Acceptance,Integration"'
 					]);
 			}); // end it
 		}); // end describe

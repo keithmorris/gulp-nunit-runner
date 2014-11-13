@@ -4,16 +4,19 @@ var _ = require('lodash'),
 	child_process = require('child_process'),
 	gutil = require('gulp-util'),
 	PluginError = gutil.PluginError,
-	es = require('event-stream');
+	es = require('event-stream'),
+	path = require('path'),
+	temp = require('temp'),
+	fs = require('fs'),
+	teamcity = require('./lib/teamcity');
 
 var PLUGIN_NAME = 'gulp-nunit-runner';
+var NUNIT_CONSOLE = 'nunit-console.exe';
+var NUNIT_X86_CONSOLE = 'nunit-console-x86.exe';
 
 // Main entry point
 var runner = function gulpNunitRunner(opts) {
-	if (!opts || !opts.executable) {
-		throw new PluginError(PLUGIN_NAME,
-			"Path to NUnit executable is required in options.executable.");
-	}
+	opts = opts || {};
 
 	var files = [];
 
@@ -32,8 +35,12 @@ var runner = function gulpNunitRunner(opts) {
 };
 
 runner.getExecutable = function (options) {
+	var consoleRunner = options.platform === 'x86' ? NUNIT_X86_CONSOLE : NUNIT_CONSOLE;
+	if (!options.executable) return consoleRunner;
 	// trim any existing surrounding quotes and then wrap in ""
-	return options.executable.replace(/(^")|(^')|("$)|('$)/g, "");
+	var executable = trim(options.executable, '\\s', '"', "'");
+	return !path.extname(options.executable) ?
+		path.join(executable, consoleRunner) : executable;
 };
 
 runner.getArguments = function (options, assemblies) {
@@ -56,7 +63,11 @@ function parseSwitches(options) {
 			return undefined;
 		}
 		if (typeof val === 'string') {
-			return ('/' + key + ':' + val + '');
+			var qualifier = val.trim().indexOf(' ') > -1 ? '"' : '';
+			return ('/' + key + ':' + qualifier + val + qualifier);
+		}
+		if (val instanceof Array) {
+			return ('/' + key + ':"' + val.join(',') + '"');
 		}
 	});
 
@@ -76,6 +87,16 @@ function end(stream) {
 }
 
 function run(stream, files, options) {
+
+	var cleanupTempFiles;
+
+	options.options = options.options || {};
+
+	if (!options.options.result && options.teamcity) {
+		temp.track();
+		options.options.result = temp.path({suffix: '.xml'});
+		cleanupTempFiles = temp.cleanup;
+	}
 
 	var assemblies = files.map(function (file) {
 		return file.path;
@@ -97,14 +118,28 @@ function run(stream, files, options) {
 		args,
 		opts);
 
+	child.on('error', function (e) {
+		fail(stream, e.code === 'ENOENT' ? 'Unable to find \'' + exe + '\'.' : e.message);
+	});
+
 	child.on('close', function (code) {
+		if (options.teamcity) gutil.log.apply(null, teamcity(fs.readFileSync(options.options.result, 'utf8')));
+		if (cleanupTempFiles) cleanupTempFiles();
 		if (code !== 0) {
 			gutil.log(gutil.colors.red('NUnit tests failed.'));
 			fail(stream, 'NUnit tests failed.');
 		}
-		gutil.log(gutil.colors.cyan('NUnit tests passed'));
+		else gutil.log(gutil.colors.cyan('NUnit tests passed'));
 		return end(stream);
 	});
+}
+
+function trim() {
+	var args = Array.prototype.slice.call(arguments)
+	var source = args[0];
+	var replacements = args.slice(1).join(',');
+	var regex = new RegExp("^[" + replacements + "]+|[" + replacements + "]+$", "g");
+	return source.replace(regex, '');
 }
 
 module.exports = runner;

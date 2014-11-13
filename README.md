@@ -11,7 +11,7 @@ npm install --save-dev gulp-nunit-runner
 ```
 
 ##Usage
-The plugin uses standard `gulp.src` globs to retrieve a list of assemblies that should be tested with Nunit. In its simplest form you just need to supply the command with the path to your `nunit-console.exe`. You should add `{read: false}` to your `gulp.src` so that it doesn't actually read the files and only grabs the file names.
+The plugin uses standard `gulp.src` globs to retrieve a list of assemblies that should be tested with Nunit. By default the plugin looks for the NUnit console runner in your `PATH`. You can optionally specify the NUnit `bin` folder or the full path of the runner as demonstrated below. You should add `{read: false}` to your `gulp.src` so that it doesn't actually read the files and only grabs the file names.
 
 ```javascript
 var gulp = require('gulp'),
@@ -33,7 +33,7 @@ C:/nunit/bin/nunit-console.exe "C:\full\path\to\Database.Test.dll" "C:\full\path
 
 Note: If you use Windows paths with `\`'s, you need to escape them with another `\`. (e.g. `C:\\nunit\\bin\\nunit-console.exe`). However, you may also use forward slashes `/` instead which don't have to be escaped.
 
-You may also add options that will be used as NUnit command line switches. Any property that is a boolean `true` will simply be added to the command line while String values will be added to the switch parameter separated by a colon.
+You may also add options that will be used as NUnit command line switches. Any property that is a boolean `true` will simply be added to the command line, String values will be added to the switch parameter separated by a colon and arrays will be a comma seperated list of values.
 
 For more information on available switches, see the NUnit documentation:
 
@@ -60,7 +60,124 @@ This would result in the following command:
 ```bat
 C:/nunit/bin/nunit-console.exe /nologo /config:"Release" /transform:"myTransform.xslt" "C:\full\path\to\Database.Test.dll" "C:\full\path\to\Services.Test.dll"
 ```
+
+## Options
+
+Below are all avialable options.
+
+```js
+nunit({
+
+    // The NUnit bin folder or the full path of the console runner.
+    // If not specified the NUnit bin folder must be in the `PATH`.
+    executable: 'c:/Program Files/NUnit/bin',
+
+    // If the full path of the console runner is not specified this determines 
+    // what version of the console runner is used. Defaults to anycpu.
+    // http://www.nunit.org/index.php?p=nunit-console&r=2.6.3
+    platform: 'anycpu|x86',
+
+    // Output TeamCity service messages.
+    // https://confluence.jetbrains.com/display/TCD8/Build+Script+Interaction+with+TeamCity
+    teamcity: true|false,
+
+    // The options below map directly to the NUnit console runner. See here
+    // for more info: http://www.nunit.org/index.php?p=consoleCommandLine&r=2.6.3
+    options: {
+
+        // Name of the test case(s), fixture(s) or namespace(s) to run.
+        run: ['TestSuite.Unit', 'TestSuite.Integration'],
+
+        // Name of a file containing a list of the tests to run, one per line.
+        runlist: 'TestsToRun.txt',
+
+        // Project configuration (e.g.: Debug) to load.
+        config: 'Debug',
+
+        // Name of XML result file (Default: TestResult.xml)
+        result: 'TestResult.xml',
+
+        // Suppress XML result output.
+        noresult: true|false,
+
+        // File to receive test output.
+        output: 'TestOutput.txt',
+
+        // File to receive test error output.
+        err: 'TestErrors.txt',
+
+        // Work directory for output files.
+        work: 'BuildArtifacts',
+
+        // Label each test in stdOut.
+        labels: true|false,
+
+        // Set internal trace level.
+        trace: 'Off|Error|Warning|Info|Verbose',
+
+        // List of categories to include.
+        include: ['BaseLine', 'Unit'],
+
+        // List of categories to exclude.
+        exclude: ['Database', 'Network'],
+
+        // Framework version to be used for tests.
+        framework: 'net-1.1',
+
+        // Process model for tests.
+        process: 'Single|Separate|Multiple',
+
+        // AppDomain Usage for tests.
+        domain: 'None|Single|Multiple',
+
+        // Apartment for running tests (Default is MTA).
+        apartment: 'MTA|STA',
+
+        // Disable shadow copy when running in separate domain.
+        noshadow: true|false,
+
+        // Disable use of a separate thread for tests.
+        nothread: true|false,
+
+        // Base path to be used when loading the assemblies.
+        basepath: 'src',
+
+        // Additional directories to be probed when loading assemblies.
+        privatebinpath: ['lib', 'bin'],
+
+        // Set timeout for each test case in milliseconds.
+        timeout: 1000,
+
+        // Wait for input before closing console window.
+        wait: true|false,
+
+        // Do not display the logo.
+        nologo: true|false,
+
+        // Do not display progress.
+        nodots: true|false,
+
+        // Stop after the first test failure or error.
+        stoponerror: true|false,
+
+        // Erase any leftover cache files and exit.
+        cleanup: true|false
+
+    }
+});
+```
+
 ## Release Notes
+
+### 0.4.0 (13 Nov 2014)
+- Add build script with test, lint and watch.
+- Add Travis CI integration.
+- Add a TeamCity reporter.
+- Add support for multi options e.g. include, exclude and privatebinpath.
+- Add the ability to omit the explicit nunit path entirely and rely on it being in the PATH 
+- Add the ability to just supply the path to the bin folder but not explicitly specify the filename.
+- Add a platform flag that goes along with both exectable options to chose the x86 or anycpu version of nunit; defaults to anycpu.
+- Document all the config options in the README.
 
 ### 0.3.0 (30 Sept 2014)
 - Fixes large amount of writes by NUnit tests causing node to crash
