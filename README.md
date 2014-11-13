@@ -169,6 +169,16 @@ nunit({
 
 ## Release Notes
 
+### 0.4.0 (13 Nov 2014)
+- Add build script with test, lint and watch.
+- Add Travis CI integration.
+- Add a TeamCity reporter.
+- Add support for multi options e.g. include, exclude and privatebinpath.
+- Add the ability to omit the explicit nunit path entirely and rely on it being in the PATH 
+- Add the ability to just supply the path to the bin folder but not explicitly specify the filename.
+- Add a platform flag that goes along with both exectable options to chose the x86 or anycpu version of nunit; defaults to anycpu.
+- Document all the config options in the README.
+
 ### 0.3.0 (30 Sept 2014)
 - Fixes large amount of writes by NUnit tests causing node to crash
 - Switched to using `child_process::spawn`, much simpler command building.
