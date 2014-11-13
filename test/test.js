@@ -54,7 +54,7 @@ var path = require('path');
 			it('Should add the anycpu executable if only a path is passed and anycpy platform is specified', function () {
 				opts = {
 					executable: path.join('C:', 'nunit', 'bin'),
-					platform: 'anycpu'
+					platform  : 'anycpu'
 				};
 
 				expect(nunit.getExecutable(opts)).to.equal(path.join('C:', 'nunit', 'bin', 'nunit-console.exe'));
@@ -63,7 +63,7 @@ var path = require('path');
 			it('Should add the x86 executable if only a path is passed and platform is x86', function () {
 				opts = {
 					executable: path.join('C:', 'nunit', 'bin'),
-					platform: 'x86'
+					platform  : 'x86'
 				};
 
 				expect(nunit.getExecutable(opts)).to.equal(path.join('C:', 'nunit', 'bin', 'nunit-console-x86.exe'));
@@ -141,7 +141,7 @@ var path = require('path');
 
 			it('Should properly format multi args.', function () {
 				opts = {
-					options   : {
+					options: {
 						exclude: ['Acceptance', 'Integration']
 					}
 				};

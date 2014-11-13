@@ -39,7 +39,7 @@ runner.getExecutable = function (options) {
 	if (!options.executable) return consoleRunner;
 	// trim any existing surrounding quotes and then wrap in ""
 	var executable = trim(options.executable, '\\s', '"', "'");
-	return !path.extname(options.executable) ? 
+	return !path.extname(options.executable) ?
 		path.join(executable, consoleRunner) : executable;
 };
 
@@ -94,7 +94,7 @@ function run(stream, files, options) {
 
 	if (!options.options.result && options.teamcity) {
 		temp.track();
-		options.options.result = temp.path({ suffix: '.xml' });
+		options.options.result = temp.path({suffix: '.xml'});
 		cleanupTempFiles = temp.cleanup;
 	}
 
@@ -118,9 +118,9 @@ function run(stream, files, options) {
 		args,
 		opts);
 
-	child.on('error', function(e) { 
+	child.on('error', function (e) {
 		fail(stream, e.code === 'ENOENT' ? 'Unable to find \'' + exe + '\'.' : e.message);
-	}); 
+	});
 
 	child.on('close', function (code) {
 		if (options.teamcity) gutil.log.apply(null, teamcity(fs.readFileSync(options.options.result, 'utf8')));
