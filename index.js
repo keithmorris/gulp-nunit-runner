@@ -67,7 +67,7 @@ function parseSwitches(options) {
 			return ('/' + key + ':' + qualifier + val + qualifier);
 		}
 		if (val instanceof Array) {
-			return ('/' + key + ':"' + val.join(',') + '"');
+			return ('/' + key + ':' + val.join(','));
 		}
 	});
 
