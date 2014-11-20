@@ -148,7 +148,7 @@ var path = require('path');
 
 				expect(nunit.getArguments(opts, [])).to.deep.equal(
 					[
-						'/exclude:"Acceptance,Integration"'
+						'/exclude:Acceptance,Integration'
 					]);
 			}); // end it
 		}); // end describe
