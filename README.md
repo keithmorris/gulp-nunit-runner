@@ -64,7 +64,7 @@ C:/nunit/bin/nunit-console.exe /nologo /config:"Release" /transform:"myTransform
 
 ## Options
 
-Below are all avialable options.
+Below are all available options. With the release of NUnit 3.x, some options have been removed and some added. Version specific options have been labeled with the version they apply to. For more information on deprecated options see [here](https://github.com/nunit/nunit/wiki/Breaking-Changes#console-command-line-options). For more information on new options see [here](https://github.com/nunit/nunit/wiki/Console-Command-Line).
 
 ```js
 nunit({
@@ -73,12 +73,14 @@ nunit({
     // If not specified the NUnit bin folder must be in the `PATH`.
     executable: 'c:/Program Files/NUnit/bin',
 
-    // If the full path of the console runner is not specified this determines 
+    // [2.x] If the full path of the console runner is not specified this determines 
     // what version of the console runner is used. Defaults to anycpu.
+    // NOTE: This has been superseded by the 'x86' option below in 3.x.
     // http://www.nunit.org/index.php?p=nunit-console&r=2.6.3
     platform: 'anycpu|x86',
 
-    // Output TeamCity service messages.
+    // [2.x] Output TeamCity service messages.
+    // NOTE: This has been superseded by the 'teamcity' option below in 3.x.
     // https://confluence.jetbrains.com/display/TCD8/Build+Script+Interaction+with+TeamCity
     teamcity: true|false,
 
@@ -86,35 +88,19 @@ nunit({
     // for more info: http://www.nunit.org/index.php?p=consoleCommandLine&r=2.6.3
     options: {
 
-        // Name of the test case(s), fixture(s) or namespace(s) to run.
+        // [3.x] Name of the test case(s), fixture(s) or namespace(s) to run.
+        test: ['TestSuite.Unit', 'TestSuite.Integration'],
+
+        // [3.x] Name of a file containing a list of the tests to run, one per line.
+        testist: 'TestsToRun.txt',
+
+        // [2.x] Name of the test case(s), fixture(s) or namespace(s) to run.
+        // NOTE: This has been superseded by the 'test' option above in 3.x.
         run: ['TestSuite.Unit', 'TestSuite.Integration'],
 
-        // Name of a file containing a list of the tests to run, one per line.
+        // [2.x] Name of a file containing a list of the tests to run, one per line.
+        // NOTE: This has been superseded by the 'testlist' option above in 3.x.
         runlist: 'TestsToRun.txt',
-
-        // Project configuration (e.g.: Debug) to load.
-        config: 'Debug',
-
-        // Name of XML result file (Default: TestResult.xml)
-        result: 'TestResult.xml',
-
-        // Suppress XML result output.
-        noresult: true|false,
-
-        // File to receive test output.
-        output: 'TestOutput.txt',
-
-        // File to receive test error output.
-        err: 'TestErrors.txt',
-
-        // Work directory for output files.
-        work: 'BuildArtifacts',
-
-        // Label each test in stdOut.
-        labels: true|false,
-
-        // Set internal trace level.
-        trace: 'Off|Error|Warning|Info|Verbose',
 
         // List of categories to include.
         include: ['BaseLine', 'Unit'],
@@ -122,8 +108,8 @@ nunit({
         // List of categories to exclude.
         exclude: ['Database', 'Network'],
 
-        // Framework version to be used for tests.
-        framework: 'net-1.1',
+        // Project configuration (e.g.: Debug) to load.
+        config: 'Debug',
 
         // Process model for tests.
         process: 'Single|Separate|Multiple',
@@ -131,37 +117,96 @@ nunit({
         // AppDomain Usage for tests.
         domain: 'None|Single|Multiple',
 
-        // Apartment for running tests (Default is MTA).
-        apartment: 'MTA|STA',
+        // Framework version to be used for tests.
+        framework: 'net-1.1',
 
-        // Disable shadow copy when running in separate domain.
-        noshadow: true|false,
+        // [3.x] Run tests in a 32-bit process on 64-bit systems.
+        x86: true|false,
 
-        // Disable use of a separate thread for tests.
-        nothread: true|false,
+        // [3.x] Dispose each test runner after it has finished running its tests.
+        "dispose-runners": true|false,
 
-        // Base path to be used when loading the assemblies.
-        basepath: 'src',
-
-        // Additional directories to be probed when loading assemblies.
-        privatebinpath: ['lib', 'bin'],
-
-        // Set timeout for each test case in milliseconds.
+        // Timeout for each test case in milliseconds.
         timeout: 1000,
 
-        // Wait for input before closing console window.
-        wait: true|false,
+        // [3.x] Random seed used to generate test cases.
+        seed: 5150,
 
-        // Do not display the logo.
-        nologo: true|false,
-
-        // Do not display progress.
-        nodots: true|false,
+        // [3.x] Number of worker threads to be used in running tests.
+        workers: 5,
 
         // Stop after the first test failure or error.
         stoponerror: true|false,
 
-        // Erase any leftover cache files and exit.
+        // Wait for input before closing console window.
+        wait: true|false,
+
+        // [3.x] Pause before run to allow debugging.
+        pause: true|false,
+
+        // Work directory for output files.
+        work: 'BuildArtifacts',
+
+        // File to receive test output.
+        output: 'TestOutput.txt',
+
+        // File to receive test error output.
+        err: 'TestErrors.txt',
+
+        // Name of XML result file (Default: TestResult.xml)
+        result: 'TestResult.xml',
+
+        // [3.x] Save test info rather than running tests. Name of output file.
+        explore: 'TestInfo.xml',
+
+        // Suppress XML result output.
+        noresult: true|false,
+
+        // Label each test in stdOut.
+        labels: true|false,
+
+        // Set internal trace level.
+        trace: 'Off|Error|Warning|Info|Verbose',
+
+        // [3.x] Tells .NET to copy loaded assemblies to the shadowcopy directory.
+        shadowcopy: true|false,
+
+        // [2.x] Disable shadow copy when running in separate domain.
+        // NOTE In 3.x, The console runner now disables shadow copy by 
+        // default. use new 'shadowcopy' option in 3.x to turn it on.
+        noshadow: true|false,
+
+        // [3.x] Turns on use of TeamCity service messages.
+        teamcity: true|false,
+
+        // [3.x] Suppress display of program information at start of run.
+        noheader: true|false,
+
+        // [3.x] Displays console output without color.
+        nocolor: true|false,
+
+        // [3.x] Display additional information as the test runs.
+        verbose: true|false,
+
+        // [2.x] Do not display the logo.
+        nologo: true|false,
+
+        // [2.x] Do not display progress.
+        nodots: true|false,
+
+        // [2.x] Apartment for running tests (Default is MTA).
+        apartment: 'MTA|STA',
+
+        // [2.x] Disable use of a separate thread for tests.
+        nothread: true|false,
+
+        // [2.x] Base path to be used when loading the assemblies.
+        basepath: 'src',
+
+        // [2.x] Additional directories to be probed when loading assemblies.
+        privatebinpath: ['lib', 'bin'],
+
+        // [2.x] Erase any leftover cache files and exit.
         cleanup: true|false
 
     }
@@ -169,6 +214,9 @@ nunit({
 ```
 
 ## Release Notes
+
+### 0.4.2 (28 June 2015)
+- Add NUnit 3.x options and labled 2.x options to README.md
 
 ### 0.4.1 (20 Nov 2014)
 - Remove quotes around multi args.
