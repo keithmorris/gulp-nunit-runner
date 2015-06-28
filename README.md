@@ -215,6 +215,9 @@ nunit({
 
 ## Release Notes
 
+### 0.4.2 (28 June 2015)
+- Add NUnit 3.x options and labled 2.x options to README.md
+
 ### 0.4.1 (20 Nov 2014)
 - Remove quotes around multi args.
 
