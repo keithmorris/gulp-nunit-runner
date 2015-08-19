@@ -1,6 +1,10 @@
 #gulp-nunit-runner
 
-[![Build Status](https://travis-ci.org/keithmorris/gulp-nunit-runner.svg?branch=master)](https://travis-ci.org/keithmorris/gulp-nunit-runner)
+[![NPM version](http://img.shields.io/npm/v/gulp-nunit-runner.svg?style=flat)](http://npmjs.org/gulp-nunit-runner)
+[![NPM downloads](http://img.shields.io/npm/dm/gulp-nunit-runner.svg?style=flat)](http://npmjs.org/gulp-nunit-runner)
+[![Build Status](http://img.shields.io/travis/keithmorris/gulp-nunit-runner/master.svg?style=flat)](https://travis-ci.org/keithmorris/gulp-nunit-runner)
+[![Dependencies Status](http://img.shields.io/david/keithmorris/gulp-nunit-runner.svg?style=flat)](https://david-dm.org/keithmorris/gulp-nunit-runner)
+[![DevDependencies Status](http://img.shields.io/david/dev/keithmorris/gulp-nunit-runner.svg?style=flat)](https://david-dm.org/keithmorris/gulp-nunit-runner#info=devDependencies)
 
 A [Gulp.js](http://gulpjs.com/) plugin to facilitate running [NUnit](http://www.nunit.org/) tests on .NET assemblies. Much of this work was inspired by the [gulp-nunit](https://github.com/stormid/gulp-nunit) plugin.
 
