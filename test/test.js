@@ -91,9 +91,9 @@ var path = require('path');
 		});
 
 		describe('Adding assemblies and option switches should yield correct command.', function () {
-			var stream;
-			var opts;
-			var assemblies;
+			var stream,
+				opts,
+				assemblies;
 
 			it('Should throw an error with no assemblies', function (cb) {
 				stream = nunit({

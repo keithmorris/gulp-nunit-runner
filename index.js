@@ -8,19 +8,23 @@ var _ = require('lodash'),
 	path = require('path'),
 	temp = require('temp'),
 	fs = require('fs'),
-	teamcity = require('./lib/teamcity');
+	teamcity = require('./lib/teamcity'),
 
-var PLUGIN_NAME = 'gulp-nunit-runner';
-var NUNIT_CONSOLE = 'nunit-console.exe';
-var NUNIT_X86_CONSOLE = 'nunit-console-x86.exe';
+	PLUGIN_NAME = 'gulp-nunit-runner',
+	NUNIT_CONSOLE = 'nunit-console.exe',
+	NUNIT_X86_CONSOLE = 'nunit-console-x86.exe',
+
+	runner;
 
 // Main entry point
-var runner = function gulpNunitRunner(opts) {
+runner = function gulpNunitRunner(opts) {
+	var stream,
+		files;
 	opts = opts || {};
 
-	var files = [];
+	files = [];
 
-	var stream = es.through(function write(file) {
+	stream = es.through(function write(file) {
 		if (_.isUndefined(file)) {
 			fail(this, 'File may not be null.');
 		}
@@ -35,10 +39,14 @@ var runner = function gulpNunitRunner(opts) {
 };
 
 runner.getExecutable = function (options) {
-	var consoleRunner = options.platform === 'x86' ? NUNIT_X86_CONSOLE : NUNIT_CONSOLE;
-	if (!options.executable) return consoleRunner;
+	var executable,
+		consoleRunner;
+	consoleRunner = options.platform === 'x86' ? NUNIT_X86_CONSOLE : NUNIT_CONSOLE;
+	if (!options.executable) {
+		return consoleRunner;
+	}
 	// trim any existing surrounding quotes and then wrap in ""
-	var executable = trim(options.executable, '\\s', '"', "'");
+	executable = trim(options.executable, '\\s', '"', "'");
 	return !path.extname(options.executable) ?
 		path.join(executable, consoleRunner) : executable;
 };
@@ -55,7 +63,9 @@ runner.getArguments = function (options, assemblies) {
 };
 
 function parseSwitches(options) {
-	var switches = _.map(options, function (val, key) {
+	var filtered,
+		switches;
+	switches = _.map(options, function (val, key) {
 		if (typeof val === 'boolean') {
 			if (val) {
 				return ('/' + key);
@@ -71,7 +81,7 @@ function parseSwitches(options) {
 		}
 	});
 
-	var filtered = _.filter(switches, function (val) {
+	filtered = _.filter(switches, function (val) {
 		return !_.isUndefined(val);
 	});
 
@@ -88,7 +98,12 @@ function end(stream) {
 
 function run(stream, files, options) {
 
-	var cleanupTempFiles;
+	var child,
+		args,
+		exe,
+		opts,
+		assemblies,
+		cleanupTempFiles;
 
 	options.options = options.options || {};
 
@@ -98,7 +113,7 @@ function run(stream, files, options) {
 		cleanupTempFiles = temp.cleanup;
 	}
 
-	var assemblies = files.map(function (file) {
+	assemblies = files.map(function (file) {
 		return file.path;
 	});
 
@@ -106,39 +121,41 @@ function run(stream, files, options) {
 		return fail(stream, 'Some assemblies required.'); //<-- See what I did there ;)
 	}
 
-	var opts = {
+	opts = {
 		stdio: [process.stdin, process.stdout, process.stderr, 'pipe']
 	};
 
-	var exe = runner.getExecutable(options);
-	var args = runner.getArguments(options, assemblies);
+	exe = runner.getExecutable(options);
+	args = runner.getArguments(options, assemblies);
 
-	var child = child_process.spawn(
-		exe,
-		args,
-		opts);
+	child = child_process.spawn(exe, args, opts);
 
 	child.on('error', function (e) {
 		fail(stream, e.code === 'ENOENT' ? 'Unable to find \'' + exe + '\'.' : e.message);
 	});
 
 	child.on('close', function (code) {
-		if (options.teamcity) gutil.log.apply(null, teamcity(fs.readFileSync(options.options.result, 'utf8')));
-		if (cleanupTempFiles) cleanupTempFiles();
+		if (options.teamcity) {
+			gutil.log.apply(null, teamcity(fs.readFileSync(options.options.result, 'utf8')));
+		}
+		if (cleanupTempFiles) {
+			cleanupTempFiles();
+		}
 		if (code !== 0) {
 			gutil.log(gutil.colors.red('NUnit tests failed.'));
 			fail(stream, 'NUnit tests failed.');
+		} else {
+			gutil.log(gutil.colors.cyan('NUnit tests passed'));
 		}
-		else gutil.log(gutil.colors.cyan('NUnit tests passed'));
 		return end(stream);
 	});
 }
 
 function trim() {
-	var args = Array.prototype.slice.call(arguments)
-	var source = args[0];
-	var replacements = args.slice(1).join(',');
-	var regex = new RegExp("^[" + replacements + "]+|[" + replacements + "]+$", "g");
+	var args = Array.prototype.slice.call(arguments),
+		source = args[0],
+		replacements = args.slice(1).join(','),
+		regex = new RegExp("^[" + replacements + "]+|[" + replacements + "]+$", "g");
 	return source.replace(regex, '');
 }
 
