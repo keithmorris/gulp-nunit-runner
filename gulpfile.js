@@ -7,7 +7,7 @@ var gulp   = require('gulp'),
 gulp.task('default', ['test']);
 
 gulp.task('watch', function () {
-	gulp.watch('test/*.js', ['test']);
+	gulp.watch(['**/*.js', '!node_modules/**/*.js'], ['test']);
 });
 
 gulp.task('test', ['lint'], function () {
