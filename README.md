@@ -1,4 +1,4 @@
-#gulp-nunit-runner
+# gulp-nunit-runner
 
 [![NPM version](http://img.shields.io/npm/v/gulp-nunit-runner.svg?style=flat)](http://npmjs.org/gulp-nunit-runner)
 [![NPM downloads](http://img.shields.io/npm/dm/gulp-nunit-runner.svg?style=flat)](http://npmjs.org/gulp-nunit-runner)
@@ -8,14 +8,16 @@
 
 A [Gulp.js](http://gulpjs.com/) plugin to facilitate running [NUnit](http://www.nunit.org/) tests on .NET assemblies. Much of this work was inspired by the [gulp-nunit](https://github.com/stormid/gulp-nunit) plugin.
 
-##Installation
+## Installation
+
 From the root of your project (where your `gulpfile.js` is), issue the following command:
 
 ```bat
 npm install --save-dev gulp-nunit-runner
 ```
 
-##Usage
+## Usage
+
 The plugin uses standard `gulp.src` globs to retrieve a list of assemblies that should be tested with Nunit. By default the plugin looks for the NUnit console runner in your `PATH`. You can optionally specify the NUnit `bin` folder or the full path of the runner as demonstrated below. You should add `{read: false}` to your `gulp.src` so that it doesn't actually read the files and only grabs the file names.
 
 ```javascript
