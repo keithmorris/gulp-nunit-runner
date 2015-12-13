@@ -1,6 +1,6 @@
 {
   "name": "gulp-nunit-runner",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "A Gulp.js plugin to facilitate the running of NUnit unit tests on .Net assemblies. ",
   "main": "index.js",
   "scripts": {
