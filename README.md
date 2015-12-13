@@ -221,6 +221,9 @@ nunit({
 
 ## Release Notes
 
+### 0.5.0
+- Make the command line switch aware of OS so that it uses the correct character when running under mono on linux/mac.
+
 ### 0.4.2 (28 June 2015)
 - Add NUnit 3.x options and labled 2.x options to README.md
 

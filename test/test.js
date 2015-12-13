@@ -54,7 +54,7 @@ var path = require('path');
 			it('Should add the anycpu executable if only a path is passed and anycpy platform is specified', function () {
 				opts = {
 					executable: path.join('C:', 'nunit', 'bin'),
-					platform  : 'anycpu'
+					platform: 'anycpu'
 				};
 
 				expect(nunit.getExecutable(opts)).to.equal(path.join('C:', 'nunit', 'bin', 'nunit-console.exe'));
@@ -63,7 +63,7 @@ var path = require('path');
 			it('Should add the x86 executable if only a path is passed and platform is x86', function () {
 				opts = {
 					executable: path.join('C:', 'nunit', 'bin'),
-					platform  : 'x86'
+					platform: 'x86'
 				};
 
 				expect(nunit.getExecutable(opts)).to.equal(path.join('C:', 'nunit', 'bin', 'nunit-console-x86.exe'));
@@ -117,14 +117,14 @@ var path = require('path');
 			});
 
 			it('Should have correct options with options and assemblies.', function () {
-				var isWin = /^win/.test(process.platform);
-				var switchChar = isWin ? '/' : '-';
+				var isWin = /^win/.test(process.platform),
+					switchChar = isWin ? '/' : '-';
 
 				opts = {
 					executable: 'C:\\nunit\\bin\\nunit-console.exe',
-					options   : {
-						nologo   : true,
-						config   : 'Release',
+					options: {
+						nologo: true,
+						config: 'Release',
 						transform: 'myTransform.xslt'
 					}
 				};
@@ -143,8 +143,8 @@ var path = require('path');
 			});
 
 			it('Should properly format multi args.', function () {
-				var isWin = /^win/.test(process.platform);
-				var switchChar = isWin ? '/' : '-';
+				var isWin = /^win/.test(process.platform),
+					switchChar = isWin ? '/' : '-';
 
 				opts = {
 					options: {
