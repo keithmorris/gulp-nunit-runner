@@ -117,6 +117,9 @@ var path = require('path');
 			});
 
 			it('Should have correct options with options and assemblies.', function () {
+				var isWin = /^win/.test(process.platform);
+				var switchChar = isWin ? '/' : '-';
+
 				opts = {
 					executable: 'C:\\nunit\\bin\\nunit-console.exe',
 					options   : {
@@ -131,15 +134,18 @@ var path = require('path');
 
 				expect(nunit.getArguments(opts, assemblies)).to.deep.equal(
 					[
-						'/nologo',
-						'/config:Release',
-						'/transform:myTransform.xslt',
+						switchChar + 'nologo',
+						switchChar + 'config:Release',
+						switchChar + 'transform:myTransform.xslt',
 						'First.Test.dll',
 						'Second.Test.dll'
 					]);
 			});
 
 			it('Should properly format multi args.', function () {
+				var isWin = /^win/.test(process.platform);
+				var switchChar = isWin ? '/' : '-';
+
 				opts = {
 					options: {
 						exclude: ['Acceptance', 'Integration']
@@ -148,7 +154,7 @@ var path = require('path');
 
 				expect(nunit.getArguments(opts, [])).to.deep.equal(
 					[
-						'/exclude:Acceptance,Integration'
+						switchChar + 'exclude:Acceptance,Integration'
 					]);
 			}); // end it
 		}); // end describe
