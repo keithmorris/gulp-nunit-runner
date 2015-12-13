@@ -65,19 +65,23 @@ runner.getArguments = function (options, assemblies) {
 function parseSwitches(options) {
 	var filtered,
 		switches;
+
+	var isWin = /^win/.test(process.platform);
+// when running under mono on linux/mac switches must be specified with a - not a /	
+	var switchChar = isWin ? '/' : '-';
 	switches = _.map(options, function (val, key) {
 		if (typeof val === 'boolean') {
 			if (val) {
-				return ('/' + key);
+				return (switchChar + key);
 			}
 			return undefined;
 		}
 		if (typeof val === 'string') {
 			var qualifier = val.trim().indexOf(' ') > -1 ? '"' : '';
-			return ('/' + key + ':' + qualifier + val + qualifier);
+			return (switchChar + key + ':' + qualifier + val + qualifier);
 		}
 		if (val instanceof Array) {
-			return ('/' + key + ':' + val.join(','));
+			return (switchChar + key + ':' + val.join(','));
 		}
 	});
 
