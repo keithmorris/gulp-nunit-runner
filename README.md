@@ -221,6 +221,9 @@ nunit({
 
 ## Release Notes
 
+### 0.5.1
+- Fix #13 Running from Visual Studio Task Runner Fails
+
 ### 0.5.0
 - Make the command line switch aware of OS so that it uses the correct character when running under mono on linux/mac.
 
