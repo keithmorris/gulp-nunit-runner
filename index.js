@@ -127,7 +127,7 @@ function run(stream, files, options) {
 	}
 
 	opts = {
-		stdio: [process.stdin, process.stdout, process.stderr, 'pipe']
+		stdio: [null, process.stdout, process.stderr, 'pipe']
 	};
 
 	exe = runner.getExecutable(options);
