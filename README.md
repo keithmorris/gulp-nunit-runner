@@ -221,6 +221,11 @@ nunit({
 
 ## Release Notes
 
+### 0.5.2
+
+- Add check for output file before creating the TeamCity output. ([Mike O'Brien](https://github.com/mikeobrien))
+- Clean up publish package with `.npmignore`
+
 ### 0.5.1
 - Fix #13 Running from Visual Studio Task Runner Fails
 
