@@ -141,7 +141,9 @@ function run(stream, files, options) {
 
 	child.on('close', function (code) {
 		if (options.teamcity) {
-			gutil.log.apply(null, teamcity(fs.readFileSync(options.options.result, 'utf8')));
+			if (fs.existsSync(options.options.result))
+				gutil.log.apply(null, teamcity(fs.readFileSync(options.options.result, 'utf8')));
+			else fail(stream, 'NUnit output not found: ' + options.options.result);
 		}
 		if (cleanupTempFiles) {
 			cleanupTempFiles();
