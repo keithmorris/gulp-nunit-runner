@@ -90,6 +90,11 @@ nunit({
     // https://confluence.jetbrains.com/display/TCD8/Build+Script+Interaction+with+TeamCity
     teamcity: true|false,
 
+    // Do not throw a gulp error and stop the stream on failing NUnit tests.
+    // This is useful on TeamCity, where tests can be muted after the tests
+    // are run, which allow the build to pass.
+    continueOnError: true|false,
+
     // The options below map directly to the NUnit console runner. See here
     // for more info: http://www.nunit.org/index.php?p=consoleCommandLine&r=2.6.3
     options: {
