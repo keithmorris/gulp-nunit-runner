@@ -224,6 +224,13 @@ nunit({
 
 ## Release Notes
 
+### 1.0.0
+
+- Add handling of where switch for nunit3-console test runner ([Tuukka Turto](https://github.com/tuturto))
+- Dependency update
+- Update Travis tests to also test on node versions 4.x and 6.x
+- Bump version to 1.0.0
+
 ### 0.5.2
 
 - Add check for output file before creating the TeamCity output. ([Mike O'Brien](https://github.com/mikeobrien))
