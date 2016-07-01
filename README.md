@@ -108,11 +108,14 @@ nunit({
         // NOTE: This has been superseded by the 'testlist' option above in 3.x.
         runlist: 'TestsToRun.txt',
 
-        // List of categories to include.
+        // [2.x] List of categories to include.
         include: ['BaseLine', 'Unit'],
 
-        // List of categories to exclude.
+        // [2.x] List of categories to exclude.
         exclude: ['Database', 'Network'],
+
+		// [3.x] Test selection expression
+		where: 'cat != critical',
 
         // Project configuration (e.g.: Debug) to load.
         config: 'Debug',
