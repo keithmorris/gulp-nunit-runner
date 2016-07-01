@@ -1,8 +1,8 @@
 "use strict";
-var gulp   = require('gulp'),
+var gulp = require('gulp'),
 	jshint = require('gulp-jshint'),
 	filter = require('gulp-filter'),
-	mocha  = require('gulp-mocha');
+	mocha = require('gulp-mocha');
 
 gulp.task('default', ['test']);
 

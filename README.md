@@ -25,10 +25,10 @@ var gulp = require('gulp'),
     nunit = require('gulp-nunit-runner');
 
 gulp.task('unit-test', function () {
-	return gulp.src(['**/*.Test.dll'], {read: false})
-		.pipe(nunit({
-			executable: 'C:/nunit/bin/nunit-console.exe',
-		}));
+    return gulp.src(['**/*.Test.dll'], {read: false})
+        .pipe(nunit({
+            executable: 'C:/nunit/bin/nunit-console.exe',
+        }));
 });
 
 ```
@@ -51,15 +51,15 @@ var gulp = require('gulp'),
     nunit = require('gulp-nunit-runner');
 
 gulp.task('unit-test', function () {
-	return gulp.src(['**/*.Test.dll'], {read: false})
-		.pipe(nunit({
-			executable: 'C:/nunit/bin/nunit-console.exe',
-			options: {
-				nologo: true,
-				config: 'Release',
-				transform: 'myTransform.xslt'
-			}
-		}));
+    return gulp.src(['**/*.Test.dll'], {read: false})
+        .pipe(nunit({
+            executable: 'C:/nunit/bin/nunit-console.exe',
+            options: {
+                nologo: true,
+                config: 'Release',
+                transform: 'myTransform.xslt'
+            }
+        }));
 });
 ```
 This would result in the following command:
@@ -108,11 +108,14 @@ nunit({
         // NOTE: This has been superseded by the 'testlist' option above in 3.x.
         runlist: 'TestsToRun.txt',
 
-        // List of categories to include.
+        // [2.x] List of categories to include.
         include: ['BaseLine', 'Unit'],
 
-        // List of categories to exclude.
+        // [2.x] List of categories to exclude.
         exclude: ['Database', 'Network'],
+
+        // [3.x] Test selection expression
+        where: 'cat != critical',
 
         // Project configuration (e.g.: Debug) to load.
         config: 'Debug',
@@ -220,6 +223,13 @@ nunit({
 ```
 
 ## Release Notes
+
+### 1.0.0
+
+- Add handling of where switch for nunit3-console test runner ([Tuukka Turto](https://github.com/tuturto))
+- Dependency update
+- Update Travis tests to also test on node versions 4.x and 6.x
+- Bump version to 1.0.0
 
 ### 0.5.2
 

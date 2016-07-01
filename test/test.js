@@ -35,6 +35,24 @@ var path = require('path');
 				expect(nunit.getExecutable(opts)).to.equal('C:\\nunit\\bin\\nunit-console.exe');
 			});
 
+			it('Should wrap options in double quotes instead of single ones', function () {
+				var isWin = /^win/.test(process.platform),
+					switchChar = isWin ? '/' : '-';
+
+				opts = {
+					options: {
+						where: "cat != critical",
+					}
+				};
+
+				var res = nunit.getArguments(opts, []);
+
+				expect(res).to.deep.equal(
+					[
+						switchChar + 'where:cat != critical',
+					]);
+			});
+
 			it('Should unquote a single-quoted string', function () {
 				opts = {
 					executable: "'C:\\nunit\\bin\\nunit-console.exe'"
