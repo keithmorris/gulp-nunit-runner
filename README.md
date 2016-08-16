@@ -224,6 +224,10 @@ nunit({
 
 ## Release Notes
 
+### 1.1.0
+
+- Force using the `mono` command to execute the `nunit-console.exe` on non-windows systems ([dbones](https://github.com/dbones))
+
 ### 1.0.0
 
 - Add handling of where switch for nunit3-console test runner ([Tuukka Turto](https://github.com/tuturto))
