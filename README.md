@@ -229,6 +229,10 @@ nunit({
 
 ## Release Notes
 
+### 1.2.0
+
+- Add continueOnError option ([cable729](https://github.com/cable729))
+
 ### 1.1.0
 
 - Force using the `mono` command to execute the `nunit-console.exe` on non-windows systems ([dbones](https://github.com/dbones))
