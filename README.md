@@ -229,6 +229,10 @@ nunit({
 
 ## Release Notes
 
+### 1.2.1
+
+- Update dev dependencies
+
 ### 1.2.0
 
 - Add continueOnError option ([cable729](https://github.com/cable729))
