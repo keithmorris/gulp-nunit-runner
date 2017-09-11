@@ -79,7 +79,7 @@ nunit({
     // If not specified the NUnit bin folder must be in the `PATH`.
     executable: 'c:/Program Files/NUnit/bin',
 
-    // [2.x] If the full path of the console runner is not specified this determines 
+    // [2.x] If the full path of the console runner is not specified this determines
     // what version of the console runner is used. Defaults to anycpu.
     // NOTE: This has been superseded by the 'x86' option below in 3.x.
     // http://www.nunit.org/index.php?p=nunit-console&r=2.6.3
@@ -186,7 +186,7 @@ nunit({
         shadowcopy: true|false,
 
         // [2.x] Disable shadow copy when running in separate domain.
-        // NOTE In 3.x, The console runner now disables shadow copy by 
+        // NOTE In 3.x, The console runner now disables shadow copy by
         // default. use new 'shadowcopy' option in 3.x to turn it on.
         noshadow: true|false,
 
@@ -228,6 +228,10 @@ nunit({
 ```
 
 ## Release Notes
+
+### 1.2.2
+
+- Add parsing for number type options/switches ([alexmaris](https://github.com/alexmaris))
 
 ### 1.2.1
 
