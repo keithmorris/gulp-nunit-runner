@@ -175,6 +175,25 @@ var path = require('path');
 						switchChar + 'exclude:Acceptance,Integration'
 					]);
 			}); // end it
-		}); // end describe
+		}); 
+		
+		describe('Test parsing options into switches.', function(){
+			var opts, isWin = /^win/.test(process.platform),
+				switchChar = isWin ? '/' : '-';
+
+			it('Should parse number type option.', function () {
+				opts = {
+					options: {
+						number: 123,
+					}
+				};
+
+				expect(nunit.getArguments(opts, [])).to.deep.equal(
+					[
+						switchChar + 'number:123'
+					]);
+			});
+		});
+		// end describe
 	}); // end describe suite
 }());
