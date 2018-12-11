@@ -229,6 +229,10 @@ nunit({
 
 ## Release Notes
 
+### 1.2.3
+
+- Updated event-stream dependency for security issue. (thanks [alexmaris](https://github.com/alexmaris))
+
 ### 1.2.2
 
 - Add parsing for number type options/switches ([alexmaris](https://github.com/alexmaris))
